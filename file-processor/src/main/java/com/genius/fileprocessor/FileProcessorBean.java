@@ -34,24 +34,26 @@ public class FileProcessorBean {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		OrderFileMessage orderFileMessage = new OrderFileMessage(lines, fileToProcess);
 
-		try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream("C:\\work\\processed-files" + "\\" + fileToProcess.getName() + "-enriched"),
-				"utf-8"))) {
-			for (String line : lines) {
-				writer.write(line);
-			}
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return fileToProcess;
+//		try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+//				new FileOutputStream("C:\\work\\processed-files" + "\\" + fileToProcess.getName() + "-enriched"),
+//				"utf-8"))) {
+//			for (String line : lines) {
+//				writer.write(line);
+//			}
+//		} catch (UnsupportedEncodingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		//return fileToProcess;
+		return orderFileMessage;
 	}
 
 	private List<String> readFileIntoStringArray(String inputFilePath) throws IOException {
