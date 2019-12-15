@@ -8,6 +8,9 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.cloud.stream.messaging.Sink;
+
+import org.springframework.beans.factory.annotation.Value;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
@@ -15,11 +18,16 @@ import org.apache.commons.io.FilenameUtils;
 public class OutputBean {
 	private static final Logger logger = LogManager.getLogger(OutputBean.class);
 
+	@Value("${local.output.dir}")
+    private String outDir="C:\\work\\sink-output";
+	
 	@StreamListener(Sink.INPUT)
 	public void output(File outFile) throws IOException {
+		
 		logger.info("File Recived in sink " + outFile.getName());
-		String outFileName = outFile.getName() + "-new" + "." + FilenameUtils.getExtension(outFile.getName());
-		String outDir = "C:\\work\\sink-output";
+		String outFileName = outFile.getName() + "-archived" + "." + FilenameUtils.getExtension(outFile.getName());
+		
+		
 		File dest = new File(outDir + "\\" + outFileName);
 		FileUtils.copyFile(outFile, dest);
 		//Remove File from source directory 

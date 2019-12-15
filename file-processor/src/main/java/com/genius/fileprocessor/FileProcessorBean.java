@@ -20,9 +20,14 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.integration.annotation.Transformer;
 
+import org.springframework.beans.factory.annotation.Value;
+
 @EnableBinding(Processor.class)
 public class FileProcessorBean {
 	private static final Logger logger = LogManager.getLogger(FileProcessorBean.class);
+
+	@Value("${local.output.dir}")
+	private String localOutputeDir = "C:\\work\\processed-files";
 
 	@Transformer(inputChannel = Processor.INPUT, outputChannel = Processor.OUTPUT)
 	public Object transformMessage(File fileToProcess) {
@@ -31,24 +36,19 @@ public class FileProcessorBean {
 		try {
 			lines = enrichFileContents(readFileIntoStringArray(fileToProcess.getAbsolutePath()));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		logger.info("Writting processed file to : " + localOutputeDir);
 		try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream("C:\\work\\processed-files" + "\\" + fileToProcess.getName() + "-enriched"),
-				"utf-8"))) {
+				new FileOutputStream(localOutputeDir + "\\" + fileToProcess.getName() + "-enriched.txt"), "utf-8"))) {
 			for (String line : lines) {
 				writer.write(line);
 			}
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return fileToProcess;
